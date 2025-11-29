@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMCLAV + CSAA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="https://unpkg.com/leaflet-image/leaflet-image.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg main-navbar">
+        <div class="container-fluid d-flex align-items-center">
+            <div class="logo-container">
+                <a class="navbar-brand" href="#">
+                    <img src="assets/logo.png" alt="SIMCLAV_CSAA">
+                </a>
+            </div>
+            <div class="navbar-title-container flex-grow-1 text-center">
+                <h1 class="navbar-title mb-1">SIMCLAV + CSAA</h1>
+                <div class="navbar-subtitle">Sistema Integrado de Meteorología, Clima, Análisis y Visualización + Cartografía Semi-Automatizada Avanzada</div>
+            </div>
+            
+            <div class="d-flex align-items-center">
+                <div class="datetime-container me-3" id="currentDateTime"></div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="nav-item">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home">
+                    <i class="fas fa-home me-2"></i>Inicio
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="tables-tab" data-bs-toggle="tab" data-bs-target="#tables">
+                    <i class="fas fa-table me-2"></i>Tablas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="graphs-tab" data-bs-toggle="tab" data-bs-target="#graphs">
+                    <i class="fas fa-chart-line me-2"></i>Gráficas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats">
+                    <i class="fas fa-chart-bar me-2"></i>Estadísticas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="comparison-tab" data-bs-toggle="tab" data-bs-target="#comparison">
+                    <i class="fas fa-code-compare me-2"></i>Comparativa
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="map-tab" data-bs-toggle="tab" data-bs-target="#map">
+                    <i class="fas fa-map-marked-alt me-2"></i>+ CSAA
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="rai-tab" data-bs-toggle="tab" data-bs-target="#rai">
+                    <i class="fas fa-robot me-2"></i>Reporte AI
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content p-3 border border-top-0 rounded-bottom">
+            
+
+            <div class="tab-pane fade show active" id="home">
+                <div class="welcome-card">
+                    <h2><i class="fas fa-cloud-sun me-2"></i> Bienvenido a SIMCLAV + CSAA</h2>
+                    <p class="mb-0">Sistema Integrado de Meteorología, Clima, Análisis y Visualización con Cartografía Semi-Automatizada Avanzada</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-temperature-high"></i>
+                        </div>
+                        <h4>Datos Meteorológicos</h4>
+                        <p>Accede a información en tiempo real y pronósticos de hasta 14 días</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Análisis Visual</h4>
+                        <p>Visualiza datos a través de gráficas interactivas y comparativas</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h4>Cartografía Avanzada</h4>
+                        <p>Representación geoespacial con interpolación y capas personalizadas</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>Inteligencia Artificial</h4>
+                        <p>Análisis predictivo y generación de reportes automatizados</p>
+                    </div>
+                </div>
+
+                <h4 class="mb-3">Acciones Rápidas</h4>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="quick-action" onclick="showTab('tables')">
+                            <i class="fas fa-table fa-2x mb-2 text-primary"></i>
+                            <h5>Cargar Datos</h5>
+                            <p class="small">Importar datos meteorológicos desde CSV</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="quick-action" onclick="showTab('graphs')">
+                            <i class="fas fa-chart-line fa-2x mb-2 text-success"></i>
+                            <h5>Crear Gráficas</h5>
+                            <p class="small">Visualizar tendencias meteorológicas</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="quick-action" onclick="showTab('map')">
+                            <i class="fas fa-map fa-2x mb-2 text-info"></i>
+                            <h5>Ver Mapa</h5>
+                            <p class="small">Explorar datos geoespaciales</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="quick-action" onclick="showTab('rai')">
+                            <i class="fas fa-robot fa-2x mb-2 text-warning"></i>
+                            <h5>Reporte AI</h5>
+                            <p class="small">Generar análisis con inteligencia artificial</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="system-status">
+                    <div>
+                        <h5 class="mb-1">Estado del Sistema</h5>
+                        <p class="mb-0 text-success"><i class="fas fa-check-circle me-1"></i> Visualización, Análisis y Cartografía operativos (sistema de inteligencia artificial en desarrollo)</p>
+                    </div>
+                    <div class="spinner-grow text-success" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+                                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="tables">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Cargar Ubicaciones</h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="file" id="csvFileInput" accept=".csv" class="form-control mb-3">
+                                <button id="loadCsvBtn" class="btn btn-primary w-100">
+                                    <span id="csvSpinner" class="spinner-border spinner-border-sm d-none"></span>
+                                    Cargar CSV
+                                </button>
+                          <button id="deleteAllBtn" class="btn btn-danger w-100">
+                                <i class="fas fa-trash me-1"></i> Eliminar Todas las Ubicaciones
+                            </button>
+                        <div id="csvFeedback" class="mt-2 small"></div>
+                        </div>
+                    </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Selección</h5>
+                            </div>
+                            <div class="card-body">
+                                <select class="form-select" id="locationSelect"></select>
+                                <button id="loadDataBtn" class="btn btn-primary w-100">Actualizar Datos</button>
+                            </div>
+                        </div>
+                                            
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">Tiempo Actual</h5>
+                            </div>
+                            <div class="card-body" id="currentWeatherCard">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-info"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-9">
+                        <div class="card">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0" id="tableTitle">Datos Climáticos</h5>
+                            <div class="d-flex">
+                                <button id="downloadAllCsvBtn" class="btn btn-warning ms-2">
+                                    <i class="fas fa-download"></i> Descargar CONCENTRADO
+                                </button>
+                                <button id="downloadCsvBtn" class="btn btn-success ms-2">
+                                    <i class="fas fa-download"></i> Descargar TABLA
+                                </button>
+                            </div>
+                        </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="weatherTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Fecha</th>
+                                                    <th>T. Máx (°C)</th>
+                                                    <th>T. Mín (°C)</th>
+                                                    <th>Lluvia (%)</th>
+                                                    <th>Precip. (mm)</th>
+                                                    <th>Viento (km/h)</th>
+                                                    <th>Ráfagas (km/h)</th>
+                                                    <th>Dirección</th>
+                                                    <th>Suma de Radiación de Onda Corta (kWh/m²)</th>
+                                                    <th>Radiación Solar de Onda-Corta (GHI) (W/m²)</th>
+                                                    <th>GHI (W/m²)_Max</th>
+                                                    <th>Radiación Solar Directa (W/m²)</th>
+                                                    <th>Radiación Solar Directa (W/m²)_Max</th>
+                                                    <th>Irradiancia Normal Directa (DNI) (W/m²)</th>
+                                                    <th>DNI (W/m²)_Max</th>
+                                                    <th>Duración de la luz del Día (h)</th>
+                                                    <th>Índice UV</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="graphs">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Configuración</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="graphLocationSelect" class="form-label">Localidad:</label>
+                                    <select class="form-select" id="graphLocationSelect"></select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Atributos:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="TMax" id="attr1" checked>
+                                        <label class="form-check-label" for="attr1">Temperatura Máxima</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="TMin" id="attr2" checked>
+                                        <label class="form-check-label" for="attr2">Temperatura Mínima</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="P_Lluvia" id="attr3">
+                                        <label class="form-check-label" for="attr3">Probabilidad de Lluvia</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="mm" id="attr4">
+                                        <label class="form-check-label" for="attr4">Precipitación (mm)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="VientoMax" id="attr5">
+                                        <label class="form-check-label" for="attr5">Viento (km/h)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Rafagas" id="attr6">
+                                        <label class="form-check-label" for="attr6">Ráfagas (km/h)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Radiacion" id="attr7">
+                                        <label class="form-check-label" for="attr7">Suma de Radiación de Onda Corta (kWh/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ghi_avg" id="attr8">
+                                        <label class="form-check-label" for="attr8">GHI (W/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ghi_max" id="attr9">
+                                        <label class="form-check-label" for="attr9">GHI (W/m²)_Max</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dhi_avg" id="attr10">
+                                        <label class="form-check-label" for="attr10">Radiación Solar Directa (W/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dhi_max" id="attr11">
+                                        <label class="form-check-label" for="attr11">Radiación Solar Directa (W/m²)_Max</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dni_avg" id="attr12">
+                                        <label class="form-check-label" for="attr12">DNI (W/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dni_max" id="attr13">
+                                        <label class="form-check-label" for="attr13">DNI (W/m²)_Max</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="DuracionDia" id="attr14">
+                                        <label class="form-check-label" for="attr14">Duración de la luz del Día (h)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="IndiceUV" id="attr15">
+                                        <label class="form-check-label" for="attr15">Índice UV</label>
+                                    </div>
+                                </div>
+                                <button id="updateGraphBtn" class="btn btn-primary w-100">Actualizar Gráfica</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0" id="graphTitle">Gráfica de Datos Climáticos</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="weatherChart" style="width:100%;height:450px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button id="saveGraphBtn" class="btn btn-success">
+                            <i class="fas fa-download me-1"></i> Descargar Gráfica
+                        </button>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="stats">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Configuración</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="statsLocationSelect" class="form-label">Localidad:</label>
+                                    <select class="form-select" id="statsLocationSelect"></select>
+                                </div>
+                                <button id="updateStatsBtn" class="btn btn-primary w-100">Actualizar Resumen</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0" id="statsTitle">Resumen Estadístico</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="statsContent"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="comparison">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">Seleccionar Ubicaciones</h5>
+                            </div>
+                            <div class="card-body">
+                                <select id="comparisonLocations" class="form-select" multiple size="6"></select>
+                                <div class="mt-3">
+                                    <label class="form-label">Atributos a comparar:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="TMax" id="compAttr1" checked>
+                                        <label class="form-check-label" for="compAttr1">Temperatura Máxima</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="TMin" id="compAttr2" checked>
+                                        <label class="form-check-label" for="compAttr2">Temperatura Mínima</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="P_Lluvia" id="compAttr3">
+                                        <label class="form-check-label" for="compAttr3">Probabilidad de Lluvia</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="mm" id="compAttr4">
+                                        <label class="form-check-label" for="compAttr4">Precipitación (mm)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="VientoMax" id="compAttr5">
+                                        <label class="form-check-label" for="compAttr5">Viento (km/h)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Rafagas" id="compAttr6">
+                                        <label class="form-check-label" for="compAttr6">Ráfagas (km/h)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="Radiacion" id="compAttr7">
+                                        <label class="form-check-label" for="compAttr7">Suma de Radiación de Onda Corta (kWh/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ghi_avg" id="compAttr8">
+                                        <label class="form-check-label" for="compAttr8">GHI (W/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ghi_max" id="compAttr9">
+                                        <label class="form-check-label" for="compAttr9">GHI (W/m²)_Max</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dhi_avg" id="compAttr10">
+                                        <label class="form-check-label" for="compAttr10">Radiación Solar Directa (W/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dhi_max" id="compAttr11">
+                                        <label class="form-check-label" for="compAttr11">Radiación Solar Directa (W/m²)_Max</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dni_avg" id="compAttr12">
+                                        <label class="form-check-label" for="compAttr12">DNI (W/m²)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="dni_max" id="compAttr13">
+                                        <label class="form-check-label" for="compAttr13">DNI (W/m²)_Max</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="DuracionDia" id="compAttr14">
+                                        <label class="form-check-label" for="compAttr14">Duración de la luz del Día (h)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="IndiceUV" id="compAttr15">
+                                        <label class="form-check-label" for="compAttr15">Índice UV</label>
+                                    </div>
+                                </div>
+                                <button id="compareBtn" class="btn btn-primary w-100 mt-3">Comparar</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">Gráfica Comparativa</h5>
+                            </div>
+                            <div class="card-body">
+                                <label for="comparisonGraphAttr" class="form-label">Atributo para gráfica:</label>
+                                    <select id="comparisonGraphAttr" class="form-select mb-2">
+                                        <option value="TMax">Temperatura Máxima</option>
+                                        <option value="TMin">Temperatura Mínima</option>
+                                        <option value="P_Lluvia">Probabilidad de Lluvia</option>
+                                        <option value="mm">Precipitación (mm)</option>
+                                        <option value="VientoMax">Viento (km/h)</option>
+                                        <option value="Rafagas">Ráfagas (km/h)</option>
+                                        <option value="Radiacion">Suma de Radiación de Onda Corta (kWh/m²)</option>
+                                        <option value="ghi_avg">GHI (W/m²)</option>
+                                        <option value="ghi_max">GHI (W/m²)_Max</option>
+                                        <option value="dhi_avg">Radiación Solar Directa (W/m²)</option>
+                                        <option value="dhi_max">Radiación Solar Directa (W/m²)_Max</option>
+                                        <option value="dni_avg">DNI (W/m²)</option>
+                                        <option value="dni_max">DNI (W/m²)_Max</option>
+                                        <option value="DuracionDia">Duración de la luz del Día (h)</option>
+                                        <option value="IndiceUV">Índice UV</option>
+                                    </select>
+                                <button id="compareGraphBtn" class="btn btn-info w-100">Mostrar Gráfica</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Comparación de Datos</h5>
+                            </div>
+                            <div class="card-body" id="comparisonContent">
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Gráfica de Comparación</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="comparisonChart" style="width:100%;height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+
+ <!-- Pestaña de Cartografía Semi Automatizada Avanzada (+CSAA) -->
+            <div class="tab-pane fade" id="map">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Mapa Pronóstico</h5>
+                        <div class="d-flex gap-4">
+                            <div>
+                                <label for="mapDaySelect" class="form-label mb-0">Día:</label>
+                                <select id="mapDaySelect" class="form-select form-select-sm"></select>
+                            </div>
+                            <div>
+                                <label for="mapAttributeSelect" class="form-label mb-0">Mostrar:</label>
+                                <select id="mapAttributeSelect" class="form-select form-select-sm">
+                                    <option value="TMax">Temperatura Máxima (°C)</option>
+                                    <option value="TMin">Temperatura Mínima (°C)</option>
+                                    <option value="P_Lluvia">Probabilidad de Lluvia (%)</option>
+                                    <option value="mm">Precipitación (mm)</option>
+                                    <option value="VientoMax">Viento Predominante (km/h)</option>
+                                    <option value="Rafagas">Ráfagas Máximas (km/h)</option>
+                                </select>
+                            </div>
+                            <div class="ms-3">
+                                <input type="file" id="boundaryFileInput" accept=".geojson,.json" class="d-none">
+                                <button id="loadBoundaryBtn" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-draw-polygon me-1"></i> Cargar Límite
+                                </button>
+                            </div>
+                            <div class="ms-2">
+                                <input type="file" id="customLayersFileInput" accept=".geojson,.json" class="d-none">
+                                <button id="addLayersBtn" class="btn btn-sm btn-info">
+                                    <i class="fas fa-layer-group me-1"></i> Agregar Capas
+                                </button>
+                            </div>
+                            <div class="ms-2">
+                                <button id="exportInterpolationBtn" class="btn btn-sm btn-success">
+                                    <i class="fas fa-camera me-1"></i> Exportar Mapa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0 position-relative">
+                        <div id="weatherMap" style="height: 620px;"></div>
+                        
+                        <div id="mapLegendContainer" class="position-absolute top-0 end-0 m-2">
+                            <div id="pointsLegend" class="bg-white p-2 rounded shadow-sm mb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-1">Puntos</h6>
+                                    <button class="btn btn-sm btn-outline-secondary toggle-legend" data-legend="points">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div id="pointsLegendContent"></div>
+                            </div>
+                            
+                            <div id="interpolationLegend" class="bg-white p-2 rounded shadow-sm d-none">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-1">Interpolación</h6>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-danger me-1" id="clearInterpolationBtn">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary toggle-legend" data-legend="interpolation">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="interpolationLegendContent"></div>
+                            </div>
+                        </div>
+
+                        <div id="geojsonControls" class="position-absolute bottom-0 start-0 m-3">
+                            <div class="btn-group shadow-sm">
+                                <button id="removeGeojsonBtn" class="btn btn-sm btn-danger" style="z-index: 1000;">
+                                    <i class="fas fa-trash me-1"></i> Eliminar Límite
+                                </button>
+                                <button id="toggleGeojsonBtn" class="btn btn-sm btn-warning" style="z-index: 1000;">
+                                    <i class="fas fa-eye me-1"></i> Ocultar/Mostrar(Límite)
+                                </button>
+                                <button id="interpolateBtn" class="btn btn-sm btn-success" style="z-index: 1000;">
+                                    <i class="fas fa-calculator me-1"></i> Interpolar
+                                </button>
+                                <button id="toggleWindBtn" class="btn btn-sm btn-info" style="z-index: 1000;">
+                                    <i class="fas fa-wind me-1"></i> Viento
+                                </button>
+                                <button id="toggleAllPointsBtn" class="btn btn-sm btn-primary" style="z-index: 1000;">
+                                    <i class="fas fa-eye-slash me-1"></i> Ocultar Puntos
+                                </button>
+                                <button id="manageLayersBtn" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#layerManagementModal" style="z-index: 1000;">
+                                    <i class="fas fa-cog me-1"></i> Gestionar Capas
+                                </button>
+                                <button id="clearInterpolationBtn" class="btn btn-sm btn-danger" style="z-index: 1000;">
+                                    <i class="fas fa-trash me-1"></i> Limpiar Interpolación
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modals for +CSAA tab -->
+                <div class="modal fade" id="layerManagementModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Gestionar Capas</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="layerList"></div>
+                                <div id="activeLayerControls" class="d-none mt-3">
+                                    <label>Color: <input type="color" id="layerColor"></label>
+                                    <label>Opacidad: <input type="range" id="layerOpacity" min="0" max="1" step="0.05"></label>
+                                    <label>Grosor: <input type="number" id="layerWeight" min="1" max="10"></label>
+                                    <label>Relleno: <input type="color" id="layerFillColor"></label>
+                                    <label>Opacidad Relleno: <input type="range" id="layerFillOpacity" min="0" max="1" step="0.05"></label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="snapshotModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Capturar Mapa</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-2">
+                                    <label for="snapshotTitle" class="form-label">Título:</label>
+                                    <input type="text" id="snapshotTitle" class="form-control">
+                                </div>
+                                <div class="mb-2">
+                                    <label for="snapshotQuality" class="form-label">Calidad (0.5-1):</label>
+                                    <input type="number" id="snapshotQuality" class="form-control" min="0.5" max="1" step="0.05" value="1">
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeDateTime" checked>
+                                    <label class="form-check-label" for="includeDateTime">Incluir fecha y hora</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeLegend" checked>
+                                    <label class="form-check-label" for="includeLegend">Incluir leyenda</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="includeScale" checked>
+                                    <label class="form-check-label" for="includeScale">Incluir escala</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="generateSnapshot" class="btn btn-primary">Generar Imagen</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="interpolationMethodModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Seleccionar Método de Interpolación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Método de interpolación:</label>
+                                    <select id="interpolationMethodSelect" class="form-select">
+                                        <option value="idw">IDW (Distancia Inversa Ponderada)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button id="confirmInterpolation" class="btn btn-primary">Ejecutar Interpolación</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+            <!-- End of +CSAA tab -->
+     
+
+            <div class="tab-pane fade" id="rai">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card fade-in">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0"><i class="fas fa-robot me-2"></i>Reporte AI</h5>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="section-title">Sistema Integrado de Meteorología con Análisis de IA</h4>
+                                <p class="mb-3">Esta sección proporciona análisis meteorológicos avanzados utilizando inteligencia artificial para obtener insights más profundos y predicciones más precisas.</p>
+
+                                <div class="alert alert-info mt-4">
+                                    <strong><i class="fas fa-cogs me-2"></i> Funciones Internas:</strong>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <ul class="fa-ul">
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de patrones climáticos</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Detección de anomalías en datos meteorológicos</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de pronósticos externos</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de información histórica</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de zonas vulnerables</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de zonas de alto riesgo</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="fa-ul">
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de tendencias climáticas a largo plazo</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Manejo de librerías para la generación de archivos PDF</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Integración de gráficas y mapas en reportes</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis sobre la vegetación y tipo de cultivos que existen en la zona de interés</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Análisis de información en tiempo real</li>
+                                            <li class="mb-3"><span class="fa-li"><i class="fas fa-check-circle text-primary"></i></span>Revisión de estaciones meteorológicas en tiempo real</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-5 p-4 bg-light rounded border">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h5><i class="fas fa-sync-alt me-2"></i> Estado del Sistema</h5>
+                                            <p class="mb-2">Módulo de IA en desarrollo - versión preliminar 1.0.0</p>
+                                        </div>
+                                        <div class="ms-3">
+                                            <div class="spinner-grow text-primary" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-5">
+                                    <h5 class="section-title">Funcionalidades "Propuestas"</h5>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-4">
+                                            <div class="stat-card">
+                                                <i class="fas fa-cloud-sun-rain fa-2x text-primary mb-3"></i>
+                                                <h6>Predicción de Eventos Extremos</h6>
+                                                <p class="small">Detección temprana de fenómenos meteorológicos severos</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-4">
+                                            <div class="stat-card" style="border: 4px solid #ff0000;">
+                                                <i class="fas fa-seedling fa-2x text-success mb-3"></i>
+                                                <h6>Impacto Agrícola</h6>
+                                                <p class="small">Recomendaciones para cultivos basadas en condiciones climáticas</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-4">
+                                            <div class="stat-card">
+                                                <i class="fas fa-brain fa-2x text-info mb-3"></i>
+                                                <h6>Modelos Predictivos</h6>
+                                                <p class="small">Pronósticos extendidos con modelos de aprendizaje automático</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-4">
+                                            <div class="stat-card" style="border: 4px solid #ff0000;">
+                                                <i class="fas fa-solid fa-file-pdf fa-2x" style="color: #ff0000;"></i>
+                                                <h6>Generador de Reportes</h6>
+                                                <p class="small">Función que genera automaticamente un reporte detallado donde incluye graficas y 
+                                                    mapas de una zona o ubicación en especifico, considerara tendencias y todo en análisis que la
+                                                    inteligencia artificial hace.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    SIMCLAV + CSAA®2025 - Sistema Integrado de Meteorología y Cartografía Semi-Automatizada Avanzada
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
